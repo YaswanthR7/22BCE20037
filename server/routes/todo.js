@@ -1,14 +1,20 @@
-const express = require('express')
-const router = express.Router()
-const todoController = require('../controllers/todo')
+const express = require('express');
+const router = express.Router();
+const todo = require('../models/todo');
 
-
-router.get('/', todoController.getAllTodos )
-
-router.post('/', todoController.createTodo )
-
-router.patch('/:id', todoController.updateTodo)
-
-router.delete('/:id', todoController.deleteTodo)
+// Update a todo (title and description)
+router.patch('/:id', async (req, res) => {
+    try {
+        const { title, description, done } = req.body;
+        const updatedtodo = await Todo.findByIdAndUpdate(
+            req.params.id,
+            { title, description, done },
+            { new: true }
+        );
+        res.json(updatedTodo);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 module.exports = router;
